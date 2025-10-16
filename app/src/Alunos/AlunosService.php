@@ -2,6 +2,9 @@
 
 namespace App\src\Alunos;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+
 class AlunosService
 {
     protected $repository;
@@ -21,9 +24,33 @@ class AlunosService
         return $this->repository->find($cpf);
     }
 
-    public function create(array $data)
+    public function criarAluno(Request $request)
     {
-        return $this->repository->create($data);
+        //Validação
+        $validated = $request->validate([
+            'user_email' => 'required|email|exists:users,email',
+            'cpf' => 'nullable|string|max:14',
+            'data_nascimento' => 'nullable|date',
+            'sexo' => 'nullable|string|max:10',
+            'telefone' => 'nullable|string|max:15',
+            'cep' => 'nullable|string|max:9',
+            'endereco' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:100',
+            'estado' => 'nullable|string|max:2',
+        ]);
+
+        //Busca o usuário
+        $user = User::where('email', $validated['user_email'])->first();
+        $validated['user_id'] = $user->id;
+        unset($validated['user_email']);
+
+        //Gera matrícula automática
+        $lastAluno = Alunos::latest('id')->first();
+        $nextNumber = $lastAluno ? $lastAluno->id + 1 : 1;
+        $validated['matricula'] = 'A' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+        //Cria o aluno
+        return $this->repository->create($validated);
     }
 
     public function update($id, array $data)
@@ -34,10 +61,8 @@ class AlunosService
             return null;
         }
 
-        // Chama o repository pra aplicar o update
         return $this->repository->update($record->id, $data);
     }
-
 
     public function delete($id)
     {
