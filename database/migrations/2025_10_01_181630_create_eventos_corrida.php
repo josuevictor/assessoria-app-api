@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('eventos_corrida', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // atleta
-            $table->string('nome_evento');
-            $table->date('data_evento');
+            $table->string('nome_evento');        
+            $table->text('descricao')->nullable(); 
+            $table->date('data_evento');          
+            $table->time('hora_evento')->nullable(); 
             $table->float('distancia_km');
-            $table->integer('tempo_final_min')->nullable();
-            $table->integer('colocacao')->nullable();
+            $table->string('local')->nullable();
+            $table->integer('vagas')->nullable();
             $table->timestamps();
         });
     }

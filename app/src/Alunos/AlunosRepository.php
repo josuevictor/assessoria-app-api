@@ -14,7 +14,7 @@ class AlunosRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('user')->get();
     }
 
     public function find($cpf)

@@ -3,6 +3,7 @@
 namespace App\src\Planilha;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Planilha extends Model
 {
@@ -16,4 +17,10 @@ class Planilha extends Model
     ];
 
     protected $guarded = [];
+
+    // Define a relação com o modelo User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

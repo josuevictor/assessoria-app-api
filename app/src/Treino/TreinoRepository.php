@@ -13,7 +13,12 @@ class TreinoRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model
+        ->with([
+            'planilha.user:id,name' // traz o name do usuário
+        ])
+        ->get();
+        
     }
 
     public function find($planilha_id)

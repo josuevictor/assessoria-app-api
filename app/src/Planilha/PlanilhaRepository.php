@@ -15,7 +15,8 @@ class PlanilhaRepository
 
     public function all()
     {
-        return $this->model->all();
+        //return $this->model->all();
+        return $this->model->with('user')->get();
     }
 
     public function find($id)
