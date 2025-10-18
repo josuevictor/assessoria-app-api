@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             TreinosSeeder::class,
             ExerciciosSeeder::class,
             TreinosRealizadosSeeder::class,
-            EventosCorridaSeeder::class,
+            //EventosCorridaSeeder::class,
             RankingSeeder::class, 
             AtividadesStravaSeeder::class,           
         ]);
