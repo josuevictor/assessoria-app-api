@@ -69,36 +69,13 @@ class AlunosController
         return response()->json($aluno);
     }
 
-    // public function inativarStatus($id)
-    // {
-    //     if ($this->service->delete($id)) {
-    //         return response()->json(['message' => 'Cadastro inativado com sucesso'], 200);
-    //     }
-    //     return response()->json(['message' => 'Registro não encontrado'], 404);
-    // }
-
     public function inativarStatus($id)
-{
-    // Ativa log das queries apenas nesta requisição
-    \Illuminate\Support\Facades\DB::listen(function ($query) {
-        \Illuminate\Support\Facades\Log::info('Query executada durante inativarStatus', [
-            'sql' => $query->sql,
-            'bindings' => $query->bindings,
-            'time_ms' => $query->time,
-        ]);
-    });
-
-    // Chama o serviço para inativar o registro
-    if ($this->service->delete($id)) {
-        return response()->json([
-            'message' => 'Cadastro inativado com sucesso',
-            'info_log' => 'Verifique storage/logs/laravel.log para detalhes da query'
-        ], 200);
+    {
+        if ($this->service->delete($id)) {
+            return response()->json(['message' => 'Cadastro inativado com sucesso'], 200);
+        }
+        return response()->json(['message' => 'Registro não encontrado'], 404);
     }
-
-    return response()->json(['message' => 'Registro não encontrado'], 404);
-}
-
 
     public function ativarStatus($id)
     {
