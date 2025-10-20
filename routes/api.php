@@ -15,7 +15,7 @@ Route::post('/register', function (Request $request) {
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|string|min:6|confirmed',
-        'role' => 'required|in:aluno,assessor',
+        'role' => 'required|in:assessor',
     ]);
 
     $user = User::create([
@@ -66,6 +66,27 @@ Route::get('/check-user', function (Request $request) {
 
     return response()->json([
         'exists' => $user ? true : false
+    ]);
+});
+
+// 👨‍🏫 Rota para registro automático de aluno
+Route::post('/register/aluno', function (Request $request) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'cpf' => 'required|string|min:11|max:14', // usado como senha padrão
+    ]);
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->cpf), // senha = cpf
+        'role' => 'aluno', // padrão
+    ]);
+
+    return response()->json([
+        'message' => 'Usuário aluno criado com sucesso!',
+        'user' => $user,
     ]);
 });
 
