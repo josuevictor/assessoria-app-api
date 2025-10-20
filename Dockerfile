@@ -18,14 +18,16 @@ COPY . .
 # Instalar as dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Gerar chave da aplicação (caso não exista)
-RUN php artisan key:generate --force || true
+# Gerar chave da aplicação caso não exista
+RUN php artisan key:generate --force
 
 # Gerar cache de configuração e rotas
 RUN php artisan config:cache && php artisan route:cache
 
-# Expor a porta 8000 (usada pelo Artisan serve)
+# Expor a porta usada pelo Laravel
 EXPOSE 8000
 
-# Comando padrão para iniciar a aplicação
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+# Comando padrão para iniciar a aplicação:
+# 1. Executa migrations e seeders no banco do Render
+# 2. Inicia o Laravel usando serve
+CMD php artisan migrate --force --seed && php artisan serve --host=0.0.0.0 --port=8000
