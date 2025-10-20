@@ -57,6 +57,18 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
+Route::get('/check-user', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email'
+    ]);
+
+    $user = \App\Models\User::where('email', $request->email)->first();
+
+    return response()->json([
+        'exists' => $user ? true : false
+    ]);
+});
+
 //Alunos
 Route::prefix('alunos')->group(function () {
     Route::get('/', [App\src\Alunos\AlunosController::class, 'index']);
