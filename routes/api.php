@@ -9,7 +9,33 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Rota de registro
+Route::post('/register', function (Request $request) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6|confirmed',
+        'role' => 'required|in:aluno,assessor',
+    ]);
 
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => $request->role,
+    ]);
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Usuário registrado com sucesso!',
+        'user' => $user,
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+    ]);
+});
+
+//Rota de login
 Route::post('/login', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
