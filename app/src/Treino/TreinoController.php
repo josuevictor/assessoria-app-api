@@ -39,9 +39,11 @@ class TreinoController
             'distancia_prevista_km' => 'nullable|numeric',
             'tempo_previsto_min' => 'nullable|integer',
             'observacoes' => 'nullable|string|max:1000',
+            'planilha_id' => 'required|integer|exists:planilhas,id',
         ]);
 
         $cpf = $validated['cpf'];
+        $planilha_id = $validated['planilha_id'];
         unset($validated['cpf']);
 
         $aluno = \App\src\Alunos\Alunos::where('cpf', $cpf)->first();
@@ -52,15 +54,18 @@ class TreinoController
 
         $planilha = \App\src\Planilha\Planilha::where('user_id', $user_id)->first();
         $planilha_id = $planilha['id'] ?? null;
-        //dd($planilha);
+        
         if (!$planilha_id) {
             return response()->json(['message' => 'Planilha para o aluno com CPF informado não encontrada'], 404);
         }
 
+        $planilha = \App\src\Planilha\Planilha::where('id', $planilha_id)->where('user_id', $aluno->user_id)->first();
+        if (!$planilha) {
+            return response()->json(['message' => 'Planilha selecionada não pertence ao aluno informado'], 404);
+        }
+
         $validated['planilha_id'] = $planilha_id;
         unset($validated['cpf']);
-
-        //dd($validated);
 
         $treino = $this->service->create($validated);
         return response()->json($treino, 201);

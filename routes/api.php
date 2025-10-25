@@ -172,3 +172,8 @@ Route::prefix('treino-realizado')->group(function () {
     Route::put('/{id}', [App\src\TreinoRealizado\TreinoRealizadoController::class, 'update']);
     Route::delete('/{id}', [App\src\TreinoRealizado\TreinoRealizadoController::class, 'destroy']);
 });
+
+
+// Treinos Resource Route que possui todas as rotas padrão de um resource controller como index, show, store, update, destroy
+//Route::apiResource('treinos', App\src\Treino\TreinoController::class);
+
